@@ -1,3 +1,6 @@
 [Oo]bj
 [Bb]in
 .idea
+
+# DB stuff
+Migrations
