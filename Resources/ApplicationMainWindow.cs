@@ -80,7 +80,11 @@ namespace athene.Resources
             await using (var db = new DatabaseContext())
             {
                 var entries = db.Entries;
-                var listStore = new ListStore(typeof(string), typeof(string), typeof(string));
+                var listStore = new ListStore(
+                    typeof(string), 
+                    typeof(string), 
+                    typeof(string)
+                    );
                 foreach (var entry in entries)
                 {
                     listStore.AppendValues(entry.Title, entry.Author, entry.Score + "/10");
