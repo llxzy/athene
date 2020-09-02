@@ -33,7 +33,6 @@ namespace athene.Resources
         {
             Respond(ResponseType.No);
             Dispose();
-            
         }
 
         private void AddEvent(object sender, EventArgs e)
@@ -41,13 +40,16 @@ namespace athene.Resources
             Title = _titleEntry.Text;
             Author = _authorEntry.Text;
             Rating = _ratingEntry.Text;
-            if (!Rating.All(char.IsDigit))
+            var isWrong = !int.TryParse(Rating, out var parsed) || parsed > 10;
+            if (!Rating.All(char.IsDigit) || isWrong)
             {
-                var messageDialog = new MessageDialog(this, DialogFlags.DestroyWithParent, MessageType.Error,
-                    ButtonsType.Ok, "Format must be a digit.");
+                var messageDialog = new MessageDialog(this, 
+                    DialogFlags.DestroyWithParent, 
+                    MessageType.Error,
+                    ButtonsType.Ok, 
+                    "Wrong number format");
                 messageDialog.Run();
                 messageDialog.Dispose();
-                //todo check here if larger than 10 etc
                 return;
             }
             Respond(ResponseType.Ok);
