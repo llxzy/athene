@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using athene.Resources;
 using Gtk;
@@ -15,7 +16,7 @@ namespace athene
             var app = new Application("org.athene.athene", GLib.ApplicationFlags.None);
             app.Register(GLib.Cancellable.Current);
 
-            //ClearDB();
+            //ClearDb();
             //TODO Scrolling in treeview
             
             var win = new ApplicationMainWindow();
@@ -25,15 +26,17 @@ namespace athene
             Application.Run();
         }
 
-        private static void ClearDB()
+        [SuppressMessage("ReSharper", "UnusedMember.Local")]
+        private static async void ClearDb()
         {
-            using (var db = new DatabaseContext())
+            //PURELY DEBUG METHOD
+            await using (var db = new DatabaseContext())
             {
                 foreach (var e in db.Entries)
                 {
                     db.Entries.Remove(e);
                 }
-                db.SaveChanges();
+                await db.SaveChangesAsync();
             }
         }
     }
