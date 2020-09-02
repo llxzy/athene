@@ -19,14 +19,46 @@ namespace athene.Resources
             builder.Autoconnect(this);
             ColumnSetup();
             ReloadDatabase();
-            
+            _addButton.Clicked += AddClickedEvent;
+
+        }
+
+        private static async void DatabaseAdd(Entry e)
+        {
+            await using (var db = new DatabaseContext())
+            {
+                await db.Entries.AddAsync(e);
+                await db.SaveChangesAsync();
+            }
+        }
+
+        private void AddClickedEvent(object sender, EventArgs e)
+        {
+            using (var window = new AddEntryDialog())
+            {
+                var dialogRun = window.Run();
+                if ((ResponseType) dialogRun == ResponseType.No)
+                {
+                    return;
+                }
+                var entry = new Entry(window.Title, window.Author)
+                {
+                    Score = int.Parse(window.Rating)
+                }; //todo tryparse
+                if (entry.Score > 10 || entry.Score < 0)
+                {
+                    entry.Score = 0;
+                }
+                DatabaseAdd(entry);
+            }
+            ReloadDatabase();
         }
 
         private void ColumnSetup()
         {
-            var titleColumn = new TreeViewColumn {Title ="Title"};
-            var authorColumn = new TreeViewColumn {Title ="Author"};
-            var ratingColumn = new TreeViewColumn {Title ="Rating"};
+            var titleColumn = new TreeViewColumn { Title ="Title" };
+            var authorColumn = new TreeViewColumn { Title ="Author" };
+            var ratingColumn = new TreeViewColumn { Title ="Rating" };
             
             var tc = new CellRendererText();
             titleColumn.PackStart(tc, true);
@@ -43,9 +75,9 @@ namespace athene.Resources
             _treeView.AppendColumn(ratingColumn);
         }
 
-        private void ReloadDatabase()
+        private async void ReloadDatabase()
         {
-            using (var db = new DatabaseContext())
+            await using (var db = new DatabaseContext())
             {
                 var entries = db.Entries;
                 var listStore = new ListStore(typeof(string), typeof(string), typeof(string));
