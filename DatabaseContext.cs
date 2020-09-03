@@ -8,10 +8,11 @@ namespace athene
 
         public DatabaseContext()
         {
+            //Database.Migrate();
             Database.EnsureCreated();
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-            => optionsBuilder.UseSqlite("DataSource=entries.db");
+            => optionsBuilder.UseSqlite("DataSource=bookentries.db");
     }
 }
