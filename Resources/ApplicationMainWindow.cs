@@ -12,7 +12,10 @@ namespace athene.Resources
         [UI] private Button _addButton = null;
         [UI] private ComboBox _yearComboBox = null;
         [UI] private TreeView _treeView = null;
-
+        [UI] private ImageMenuItem _newItem = null;
+        [UI] private ImageMenuItem _quitButton = null;
+        [UI] private ImageMenuItem _helpButton = null;
+        
         public ApplicationMainWindow() : this(new Builder("ApplicationMainWindow.glade"))
         {
         }
@@ -25,8 +28,11 @@ namespace athene.Resources
             LoadYears();
             _yearComboBox.Changed += YearChangedEvent;
             _addButton.Clicked += AddClickedEvent;
+            _newItem.ButtonPressEvent += AddClickedEvent;
+            _helpButton.ButtonPressEvent += HelpClickedEvent;
+            _quitButton.ButtonPressEvent += QuitClickedEvent;
         }
-        
+
         private void ColumnSetup()
         {
             var titleColumn = new TreeViewColumn { Title ="Title" };
@@ -90,7 +96,24 @@ namespace athene.Resources
             var sel = (string) _yearComboBox.Model.GetValue(iterator, 0);
             ReloadDatabase(int.Parse(sel));
         }
+        
+        private void HelpClickedEvent(object o, ButtonPressEventArgs args)
+        {
+            //todo Close button not working fix
+            var dialog = new AboutDialog
+            {
+                Authors = new[] { "lxzy" },
+                License = "MIT License",
+                Website = "https://github.com/llxzy",
+                Comments = "Made for fun."
+            };
+            dialog.Show();
+        }
 
+        private void QuitClickedEvent(object o, ButtonPressEventArgs args)
+        {
+            Application.Quit();
+        }
         #endregion
         
         #region Loading
