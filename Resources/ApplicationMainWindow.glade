@@ -95,6 +95,7 @@
               <object class="GtkLabel" id="_cboxLabel">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
+                <property name="margin_left">5</property>
                 <property name="label" translatable="yes"> Select year: </property>
               </object>
               <packing>
@@ -143,6 +144,10 @@
           <object class="GtkScrolledWindow">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
+            <property name="margin_left">5</property>
+            <property name="margin_right">5</property>
+            <property name="margin_top">3</property>
+            <property name="margin_bottom">5</property>
             <property name="shadow_type">in</property>
             <child>
               <object class="GtkTreeView" id="_treeView">
