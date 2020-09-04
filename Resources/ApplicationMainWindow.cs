@@ -1,4 +1,7 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Gtk;
 using UI = Gtk.Builder.ObjectAttribute;
 
@@ -18,42 +21,12 @@ namespace athene.Resources
         {
             builder.Autoconnect(this);
             ColumnSetup();
-            ReloadDatabase();
+            ReloadDatabase(null);
+            LoadYears();
+            _yearComboBox.Changed += YearChangedEvent;
             _addButton.Clicked += AddClickedEvent;
-
         }
-
-        private static async void DatabaseAdd(Entry e)
-        {
-            await using (var db = new DatabaseContext())
-            {
-                await db.Entries.AddAsync(e);
-                await db.SaveChangesAsync();
-            }
-        }
-
-        private void AddClickedEvent(object sender, EventArgs e)
-        {
-            using (var window = new AddEntryDialog())
-            {
-                var dialogRun = window.Run();
-                if ((ResponseType) dialogRun == ResponseType.No)
-                {
-                    return;
-                }
-                var entry = new Entry(window.Title, window.Author)
-                {
-                    Score = int.Parse(window.Rating)
-                }; //todo tryparse
-                if (entry.Score > 10 || entry.Score < 0)
-                {
-                    entry.Score = 0;
-                }
-                DatabaseAdd(entry);
-            }
-            ReloadDatabase();
-        }
-
+        
         private void ColumnSetup()
         {
             var titleColumn = new TreeViewColumn { Title ="Title" };
@@ -75,11 +48,57 @@ namespace athene.Resources
             _treeView.AppendColumn(ratingColumn);
         }
 
-        private async void ReloadDatabase()
+        private static async void DatabaseAdd(Entry e)
         {
             await using (var db = new DatabaseContext())
             {
-                var entries = db.Entries;
+                await db.Entries.AddAsync(e);
+                await db.SaveChangesAsync();
+            }
+        }
+
+        #region Events
+        private void AddClickedEvent(object sender, EventArgs e)
+        {
+            using (var window = new AddEntryDialog())
+            {
+                var dialogRun = window.Run();
+                if ((ResponseType) dialogRun != ResponseType.Ok 
+                    || window.Title.Length == 0 
+                    || window.Author.Length == 0
+                    || window.Rating.Length == 0
+                    )
+                {
+                    return;
+                }
+                var entry = new Entry(window.Title, window.Author)
+                {
+                    Score = int.Parse(window.Rating)
+                }; //todo tryparse
+                if (entry.Score > 10 || entry.Score < 0)
+                {
+                    entry.Score = 0;
+                }
+                DatabaseAdd(entry);
+            }
+            ReloadDatabase(DateTime.Now.Year);
+        }
+        
+        private void YearChangedEvent(object sender, EventArgs e)
+        {
+            _yearComboBox.GetActiveIter(out var iterator);
+            var sel = (string) _yearComboBox.Model.GetValue(iterator, 0);
+            ReloadDatabase(int.Parse(sel));
+        }
+
+        #endregion
+        
+        #region Loading
+        private async void ReloadDatabase(int? year)
+        {
+            await using (var db = new DatabaseContext())
+            {
+                var entries = year == null ? db.Entries : db.Entries.Where(e => e.Year == year);
                 var listStore = new ListStore(
                     typeof(string), 
                     typeof(string), 
@@ -89,11 +108,28 @@ namespace athene.Resources
                 {
                     listStore.AppendValues(entry.Title, entry.Author, entry.Score + "/10");
                 }
-
                 _treeView.Model = listStore;
-
+                LoadYears();
             }
         }
-
+      
+        
+        private void LoadYears()
+        {
+            var yearListStore = new ListStore(typeof(string));
+            
+            //TODO move to sep func
+            using (var db = new DatabaseContext())
+            {
+                var years = db.Entries
+                    .Select(a => a.Year).Distinct().Select(a => a.ToString()).ToList();
+                foreach (var y in years)
+                {
+                    yearListStore.AppendValues(y);
+                }
+            }
+            _yearComboBox.Model = yearListStore;
+        }
+        #endregion
     }
 }
