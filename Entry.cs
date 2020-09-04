@@ -13,14 +13,14 @@ namespace athene
         public EntryFormat Format { get; set; }
         public EntryStatus Status { get; set; }
         public int Score { get; set; }
-        //public DateTime Added { get; set; }
+        public int Year { get; set; }
 
         public Entry(string title, string author)
         {
             Title = title;
             Author = author;
             Score = 0;
-            //Added = DateTime.NewNowUtc();
+            Year = DateTime.NewNowUtc().Year;
         }
     }
 }
