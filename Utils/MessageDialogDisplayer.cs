@@ -2,7 +2,7 @@ using Gtk;
 
 namespace athene.Utils
 {
-    public class MessageDialogDisplayer
+    public static class MessageDialogDisplayer
     {
         public static void Show(Window sender, string msg)
         {
