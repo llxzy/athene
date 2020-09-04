@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using athene.Utils;
 using Gtk;
 using UI = Gtk.Builder.ObjectAttribute;
 
@@ -18,7 +19,7 @@ namespace athene.Resources
         public string Author { get; set; }
         public new string Title { get; set; }
         
-        public AddEntryDialog() : this(new Builder("AddEntryWindow.glade"))
+        public AddEntryDialog() : this(new Builder("AddEntryDialog.glade"))
         {
         }
 
@@ -41,15 +42,19 @@ namespace athene.Resources
             Author = _authorEntry.Text;
             Rating = _ratingEntry.Text;
             var isWrong = !int.TryParse(Rating, out var parsed) || parsed > 10;
+            if (Title.Length == 0)
+            {
+                MessageDialogDisplayer.Show(this, "Title cannot be empty!");
+                return;
+            }
+            if (Author.Length == 0)
+            {
+                MessageDialogDisplayer.Show(this, "Author cannot be empty!");
+                return;
+            }
             if (!Rating.All(char.IsDigit) || isWrong)
             {
-                var messageDialog = new MessageDialog(this, 
-                    DialogFlags.DestroyWithParent, 
-                    MessageType.Error,
-                    ButtonsType.Ok, 
-                    "Wrong number format");
-                messageDialog.Run();
-                messageDialog.Dispose();
+                MessageDialogDisplayer.Show(this, "Wrong format for score!");
                 return;
             }
             Respond(ResponseType.Ok);
