@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using athene.Utils;
 using Gtk;
 using UI = Gtk.Builder.ObjectAttribute;
 
@@ -38,6 +39,7 @@ namespace athene.Resources
             var titleColumn = new TreeViewColumn { Title ="Title" };
             var authorColumn = new TreeViewColumn { Title ="Author" };
             var ratingColumn = new TreeViewColumn { Title ="Rating" };
+            var formatColumn = new TreeViewColumn { Title = "Format" };
             
             var tc = new CellRendererText();
             titleColumn.PackStart(tc, true);
@@ -45,13 +47,17 @@ namespace athene.Resources
             authorColumn.PackStart(ac, true);
             var rc = new CellRendererText();
             ratingColumn.PackStart(rc, true);
+            var fc = new CellRendererText();
+            formatColumn.PackStart(fc, true);
             
             titleColumn.AddAttribute(tc, "text", 0);
             authorColumn.AddAttribute(ac, "text", 1);
             ratingColumn.AddAttribute(rc, "text", 2);
+            formatColumn.AddAttribute(fc, "text", 3);
             _treeView.AppendColumn(titleColumn);
             _treeView.AppendColumn(authorColumn);
             _treeView.AppendColumn(ratingColumn);
+            _treeView.AppendColumn(formatColumn);
         }
 
         private static async void DatabaseAdd(Entry e)
@@ -79,7 +85,8 @@ namespace athene.Resources
                 }
                 var entry = new Entry(window.Title, window.Author)
                 {
-                    Score = int.Parse(window.Rating)
+                    Score = int.Parse(window.Rating),
+                    Format = StringToFormat.Convert(window.Format)
                 }; //todo tryparse
                 if (entry.Score > 10 || entry.Score < 0)
                 {
@@ -125,11 +132,12 @@ namespace athene.Resources
                 var listStore = new ListStore(
                     typeof(string), 
                     typeof(string), 
+                    typeof(string),
                     typeof(string)
                     );
                 foreach (var entry in entries)
                 {
-                    listStore.AppendValues(entry.Title, entry.Author, entry.Score + "/10");
+                    listStore.AppendValues(entry.Title, entry.Author, entry.Score + "/10", entry.Format.ToString());
                 }
                 _treeView.Model = listStore;
                 LoadYears();
@@ -140,8 +148,6 @@ namespace athene.Resources
         private void LoadYears()
         {
             var yearListStore = new ListStore(typeof(string));
-            
-            //TODO move to sep func
             using (var db = new DatabaseContext())
             {
                 var years = db.Entries
