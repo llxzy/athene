@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using athene.Enums;
 using athene.Utils;
 using Gtk;
 using UI = Gtk.Builder.ObjectAttribute;
@@ -8,13 +9,12 @@ namespace athene.Resources
 {
     public class AddEntryDialog : Dialog
     {
-        // todo rename glade file
-        
         [UI] private readonly Button _addButton = null;
         [UI] private readonly Button _cancelButton = null;
         [UI] private readonly Gtk.Entry _ratingEntry = null;
         [UI] private readonly Gtk.Entry _authorEntry = null;
         [UI] private readonly Gtk.Entry _titleEntry = null;
+        [UI] private readonly ComboBox _formatBox = null;
         public string Rating { get; set; }
         public string Author { get; set; }
         public new string Title { get; set; }
@@ -28,6 +28,22 @@ namespace athene.Resources
             builder.Autoconnect(this);
             _addButton.Clicked += AddEvent;
             _cancelButton.Clicked += CancelEvent;
+            SetFormatBox();
+        }
+
+        private void SetFormatBox()
+        {
+            var render = new CellRendererText();
+            _formatBox.PackStart(render, true);
+            _formatBox.AddAttribute(render, "text", 0);
+            
+            var listStore = new ListStore(typeof(string));
+            var formats = Enum.GetValues(typeof(EntryFormat));
+            foreach (var format in formats)
+            {
+                listStore.AppendValues(format.ToString()?.ToLower());
+            }
+            _formatBox.Model = listStore;
         }
 
         private void CancelEvent(object sender, EventArgs e)
@@ -55,6 +71,12 @@ namespace athene.Resources
             if (!Rating.All(char.IsDigit) || isWrong)
             {
                 MessageDialogDisplayer.Show(this, "Wrong format for score!");
+                return;
+            }
+
+            if (_formatBox.Active == -1)
+            {
+                MessageDialogDisplayer.Show(this, "Format cannot be empty!");
                 return;
             }
             Respond(ResponseType.Ok);
