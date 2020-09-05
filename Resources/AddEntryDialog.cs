@@ -18,6 +18,7 @@ namespace athene.Resources
         public string Rating { get; set; }
         public string Author { get; set; }
         public new string Title { get; set; }
+        public string Format { get; set; }
         
         public AddEntryDialog() : this(new Builder("AddEntryDialog.glade"))
         {
@@ -79,6 +80,11 @@ namespace athene.Resources
                 MessageDialogDisplayer.Show(this, "Format cannot be empty!");
                 return;
             }
+            
+            //gets the active item out of the combobox
+            _formatBox.GetActiveIter(out var iterator);
+            Format = (string) _formatBox.Model.GetValue(iterator, 0);
+            
             Respond(ResponseType.Ok);
             Dispose();
         }
