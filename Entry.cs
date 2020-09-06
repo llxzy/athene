@@ -11,7 +11,6 @@ namespace athene
         public string Title { get; set; }
         public string Author { get; set; }
         public EntryFormat Format { get; set; }
-        public EntryStatus Status { get; set; }
         public int Score { get; set; }
         public int Year { get; set; }
 
