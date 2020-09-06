@@ -34,10 +34,10 @@ namespace athene.Resources
 
         private void ColumnSetup()
         {
-            var titleColumn  = new TreeViewColumn { Title ="Title"   };
-            var authorColumn = new TreeViewColumn { Title ="Author"  };
-            var ratingColumn = new TreeViewColumn { Title ="Rating"  };
-            var formatColumn = new TreeViewColumn { Title = "Format" };
+            var titleColumn  = new TreeViewColumn { Title = "Title"   };
+            var authorColumn = new TreeViewColumn { Title = "Author"  };
+            var ratingColumn = new TreeViewColumn { Title = "Rating"  };
+            var formatColumn = new TreeViewColumn { Title = "Format"  };
             
             var tc = new CellRendererText();
             titleColumn.PackStart(tc, true);
