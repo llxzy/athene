@@ -11,5 +11,9 @@ entries into a .txt file, but at the same time still is simple.
 A C# program working alongside a SQLite database\
 to display data in windows, courtesy of GTK.
 
+### Why athene?
+
+Development name that I'm too lazy to change.
+
 ### Credits
 Icon made by [DinosoftLabs](https://www.flaticon.com/authors/dinosoftlabs) from [FlatIcon](https://www.flaticon.com/)
