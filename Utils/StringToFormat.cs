@@ -9,10 +9,10 @@ namespace athene.Utils
         {
             return input switch
             {
-                "epub" => EntryFormat.Epub,
-                "pdf" => EntryFormat.Pdf,
+                "epub"  => EntryFormat.Epub,
+                "pdf"   => EntryFormat.Pdf,
                 "paper" => EntryFormat.Paper,
-                _ => EntryFormat.Other
+                _       => EntryFormat.Other
             };
         }
     }
