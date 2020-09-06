@@ -1,7 +1,5 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using athene.Utils;
 using Gtk;
 using UI = Gtk.Builder.ObjectAttribute;
@@ -10,12 +8,12 @@ namespace athene.Resources
 {
     public class ApplicationMainWindow : Window
     {
-        [UI] private Button _addButton = null;
-        [UI] private ComboBox _yearComboBox = null;
-        [UI] private TreeView _treeView = null;
-        [UI] private ImageMenuItem _newItem = null;
-        [UI] private ImageMenuItem _quitButton = null;
-        [UI] private ImageMenuItem _helpButton = null;
+        [UI] private readonly Button        _addButton    = null;
+        [UI] private readonly ComboBox      _yearComboBox = null;
+        [UI] private readonly TreeView      _treeView     = null;
+        [UI] private readonly ImageMenuItem _newItem      = null;
+        [UI] private readonly ImageMenuItem _quitButton   = null;
+        [UI] private readonly ImageMenuItem _helpButton   = null;
         
         public ApplicationMainWindow() : this(new Builder("ApplicationMainWindow.glade"))
         {
@@ -27,18 +25,18 @@ namespace athene.Resources
             ColumnSetup();
             ReloadDatabase(null);
             LoadYears();
-            _yearComboBox.Changed += YearChangedEvent;
-            _addButton.Clicked += AddClickedEvent;
-            _newItem.ButtonPressEvent += AddClickedEvent;
+            _yearComboBox.Changed        += YearChangedEvent;
+            _addButton.Clicked           += AddClickedEvent;
+            _newItem.ButtonPressEvent    += AddClickedEvent;
             _helpButton.ButtonPressEvent += HelpClickedEvent;
             _quitButton.ButtonPressEvent += QuitClickedEvent;
         }
 
         private void ColumnSetup()
         {
-            var titleColumn = new TreeViewColumn { Title ="Title" };
-            var authorColumn = new TreeViewColumn { Title ="Author" };
-            var ratingColumn = new TreeViewColumn { Title ="Rating" };
+            var titleColumn  = new TreeViewColumn { Title ="Title"   };
+            var authorColumn = new TreeViewColumn { Title ="Author"  };
+            var ratingColumn = new TreeViewColumn { Title ="Rating"  };
             var formatColumn = new TreeViewColumn { Title = "Format" };
             
             var tc = new CellRendererText();
@@ -50,7 +48,7 @@ namespace athene.Resources
             var fc = new CellRendererText();
             formatColumn.PackStart(fc, true);
             
-            titleColumn.AddAttribute(tc, "text", 0);
+            titleColumn.AddAttribute( tc, "text", 0);
             authorColumn.AddAttribute(ac, "text", 1);
             ratingColumn.AddAttribute(rc, "text", 2);
             formatColumn.AddAttribute(fc, "text", 3);
@@ -104,7 +102,7 @@ namespace athene.Resources
             ReloadDatabase(int.Parse(sel));
         }
         
-        private void HelpClickedEvent(object o, ButtonPressEventArgs args)
+        private static void HelpClickedEvent(object o, ButtonPressEventArgs args)
         {
             //todo Close button not working fix
             var dialog = new AboutDialog
@@ -117,7 +115,7 @@ namespace athene.Resources
             dialog.Show();
         }
 
-        private void QuitClickedEvent(object o, ButtonPressEventArgs args)
+        private static void QuitClickedEvent(object o, ButtonPressEventArgs args)
         {
             Application.Quit();
         }
@@ -137,7 +135,10 @@ namespace athene.Resources
                     );
                 foreach (var entry in entries)
                 {
-                    listStore.AppendValues(entry.Title, entry.Author, entry.Score + "/10", entry.Format.ToString());
+                    listStore.AppendValues(entry.Title, 
+                                           entry.Author, 
+                                           entry.Score + "/10", 
+                                           entry.Format.ToString());
                 }
                 _treeView.Model = listStore;
                 LoadYears();
@@ -151,7 +152,10 @@ namespace athene.Resources
             using (var db = new DatabaseContext())
             {
                 var years = db.Entries
-                    .Select(a => a.Year).Distinct().Select(a => a.ToString()).ToList();
+                    .Select(a => a.Year)
+                    .Distinct()
+                    .Select(a => a.ToString())
+                    .ToList();
                 foreach (var y in years)
                 {
                     yearListStore.AppendValues(y);

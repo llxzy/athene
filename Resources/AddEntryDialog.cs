@@ -9,16 +9,17 @@ namespace athene.Resources
 {
     public class AddEntryDialog : Dialog
     {
-        [UI] private readonly Button _addButton = null;
-        [UI] private readonly Button _cancelButton = null;
-        [UI] private readonly Gtk.Entry _ratingEntry = null;
-        [UI] private readonly Gtk.Entry _authorEntry = null;
-        [UI] private readonly Gtk.Entry _titleEntry = null;
-        [UI] private readonly ComboBox _formatBox = null;
-        public string Rating { get; set; }
+        [UI] private readonly Button    _addButton    = null;
+        [UI] private readonly Button    _cancelButton = null;
+        [UI] private readonly Gtk.Entry _ratingEntry  = null;
+        [UI] private readonly Gtk.Entry _authorEntry  = null;
+        [UI] private readonly Gtk.Entry _titleEntry   = null;
+        [UI] private readonly ComboBox  _formatBox    = null;
         public string Author { get; set; }
-        public new string Title { get; set; }
         public string Format { get; set; }
+        public string Rating { get; set; }
+        public new string Title { get; set; }
+        
         
         public AddEntryDialog() : this(new Builder("AddEntryDialog.glade"))
         {
@@ -27,7 +28,7 @@ namespace athene.Resources
         private AddEntryDialog(Builder builder) : base(builder.GetObject("AddEntry").Handle)
         {
             builder.Autoconnect(this);
-            _addButton.Clicked += AddEvent;
+            _addButton.Clicked    += AddEvent;
             _cancelButton.Clicked += CancelEvent;
             SetFormatBox();
         }
@@ -55,7 +56,7 @@ namespace athene.Resources
 
         private void AddEvent(object sender, EventArgs e)
         {
-            Title = _titleEntry.Text;
+            Title  = _titleEntry.Text;
             Author = _authorEntry.Text;
             Rating = _ratingEntry.Text;
             var isWrong = !int.TryParse(Rating, out var parsed) || parsed > 10;
