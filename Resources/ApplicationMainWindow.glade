@@ -7,6 +7,7 @@
     <property name="title" translatable="yes">Application</property>
     <property name="default_width">680</property>
     <property name="default_height">440</property>
+    <property name="icon">Icons/icon.ico</property>
     <child type="titlebar">
       <placeholder/>
     </child>

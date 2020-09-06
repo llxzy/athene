@@ -110,7 +110,9 @@ namespace athene.Resources
                 Authors = new[] { "lxzy" },
                 License = "MIT License",
                 Website = "https://github.com/llxzy",
-                Comments = "Made for fun."
+                Comments = "Made for fun.",
+                Artists = new[] { "Icon made by DinosoftLabs at Flaticon." }
+                
             };
             dialog.Show();
         }
