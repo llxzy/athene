@@ -12,6 +12,9 @@
     </EmbeddedResource>
     <EmbeddedResource Remove="Migrations\**" />
     <None Remove="Migrations\**" />
+    <None Update="Icons\icon.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
   <ItemGroup>

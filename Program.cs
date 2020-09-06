@@ -17,7 +17,7 @@ namespace athene
             app.Register(GLib.Cancellable.Current);
 
             //ClearDb();
-            //TODO Scrolling in treeview
+            // todo right click menu in treeview
             
             var win = new ApplicationMainWindow();
             app.AddWindow(win);
