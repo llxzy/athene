@@ -7,12 +7,12 @@ namespace athene
     public class Entry
     {
         [Key]
-        public int Id { get; set; }
-        public string Title { get; set; }
-        public string Author { get; set; }
+        public int         Id     { get; set; }
+        public string      Title  { get; set; }
+        public string      Author { get; set; }
         public EntryFormat Format { get; set; }
-        public int Score { get; set; }
-        public int Year { get; set; }
+        public int         Score  { get; set; }
+        public int         Year   { get; set; }
 
         public Entry(string title, string author)
         {

@@ -15,10 +15,10 @@ namespace athene.Resources
         [UI] private readonly Gtk.Entry _authorEntry  = null;
         [UI] private readonly Gtk.Entry _titleEntry   = null;
         [UI] private readonly ComboBox  _formatBox    = null;
-        public string Author { get; set; }
-        public string Format { get; set; }
-        public string Rating { get; set; }
-        public new string Title { get; set; }
+        public string     Author { get; set; }
+        public string     Format { get; set; }
+        public string     Rating { get; set; }
+        public new string Title  { get; set; }
         
         
         public AddEntryDialog() : this(new Builder("AddEntryDialog.glade"))
