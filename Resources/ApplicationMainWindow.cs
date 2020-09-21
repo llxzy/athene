@@ -84,9 +84,10 @@ namespace athene.Resources
                 var entry = new Entry(window.Title, window.Author)
                 {
                     Score = int.Parse(window.Rating),
+                    // int.TryParse is redundant because the value is checked within window itself
                     Format = StringToFormat.Convert(window.Format)
-                }; //todo tryparse
-                if (entry.Score > 10 || entry.Score < 0)
+                };
+                if (entry.Score < 0 || entry.Score > 10)
                 {
                     entry.Score = 0;
                 }
