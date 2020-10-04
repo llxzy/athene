@@ -22,9 +22,7 @@ namespace athene
             var win = new ApplicationMainWindow();
             app.AddWindow(win);
 
-            win.DeleteEvent += delegate (object sender, DeleteEventArgs e) {
-                Application.Quit();
-            };
+            win.DeleteEvent += delegate { Application.Quit(); };
 
             win.Show();
             Application.Run();
