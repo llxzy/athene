@@ -3,7 +3,8 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-  </PropertyGroup>
+    <DefaultItemExcludes>$(DefaultItemExcludes);publish**</DefaultItemExcludes>
+</PropertyGroup>
 
   <ItemGroup>
     <None Remove="**\*.glade" />
